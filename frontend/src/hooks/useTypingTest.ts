@@ -12,7 +12,7 @@ const useTypingTest = (options: {
 
     // The main state of the game
     const [gameState, setGameState ] = useState<GameState>(GameState.Idle);
-    const { words, settings, isLoading, error, fetchNewWords } = useWordProvider(options.mode);
+    const { words, settings, fetchNewWords } = useWordProvider(options.mode);
 
     const typingSession = useTypingSession(words);
 

@@ -2,7 +2,6 @@
 
 import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider, Navigate } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
-import TypingTest from './components/Game/TypingTest';
 
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
