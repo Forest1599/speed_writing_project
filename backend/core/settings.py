@@ -62,12 +62,7 @@ INSTALLED_APPS = [
     'fyp',
 ]
 
-CORS_ALLOWED_ORIGINS = os.getenv("CORS_WHITELIST", "").split(",")
-
-# CORS_ALLOWED_ORIGINS = [
-#     # "http://localhost:5173" # For the local one
-#     "https://pressures-blotchier.poseidon.salford.ac.uk/"
-#     ]
+CORS_ALLOWED_ORIGINS = os.getenv("DJANGO_CORS_ORIGINS", "").split(",")
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -105,6 +100,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 
+# Used in production
 DATABASES = {
     'default': {
         'ENGINE': 'mysql.connector.django',
@@ -116,29 +112,17 @@ DATABASES = {
     }
 }
 
+# Used in local
 # DATABASES = {
-
 #     'default': {
-#         'ENGINE': 'django.db.backends.mysql',  # MariaDB uses this too
-#         'NAME': 'agg785_fyp',
-#         'USER': 'agg785',
-#         'PASSWORD': 'WanRltw159.234',
-#         'HOST': '127.0.0.1',
-#         'PORT': '3306',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
-
-#     # The local one
-#     # 'default': {
-#     #     'ENGINE': 'django.db.backends.sqlite3',
-#     #     'NAME': BASE_DIR / 'db.sqlite3',
-#     # }
 # }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
-# Use this for stronger validation
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',

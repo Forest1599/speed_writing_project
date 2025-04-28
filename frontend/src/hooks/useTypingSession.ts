@@ -21,7 +21,7 @@ const useTypingSession = (words: string[]) => {
 
   // Handle keyboard input
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    // const currentWord: string = words[currentWordIndex];
+
     const currentWord: string = words[currentWordIndex];
 
     // Ignore modifier keys except Backspace and Space
@@ -135,10 +135,8 @@ const useTypingSession = (words: string[]) => {
     userInput,
     completedWords,
     currentWordIndex,
-    // visibleWords,
     handleKeyPress,
     handleReset,
-    // scrollOffset,
   };
 }
 

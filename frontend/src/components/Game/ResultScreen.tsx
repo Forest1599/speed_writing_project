@@ -84,7 +84,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
 
           <div className="flex justify-between">
             <span>Accuracy:</span>
-            <span className="font-semibold text-blue-400">{results.accuracy}%</span>
+            <span className="font-semibold text-blue-400">{results?.accuracy || 0}%</span>
           </div>
 
           <div className="flex justify-between">

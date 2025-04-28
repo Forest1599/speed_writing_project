@@ -38,7 +38,6 @@ type ProtectedRouteProps = {
             }
 
         } catch (error) { // If any error occurs during that process
-            console.log(error);
             setIsAuthorised(false);
         }
     }

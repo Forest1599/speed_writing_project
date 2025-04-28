@@ -40,8 +40,6 @@ const Profile = () => {
         setProfileStats(data);
       } catch (err) {
 
-        // Add some error handling
-        console.error("Failed to load profile stats:", err);
       }
     };
 

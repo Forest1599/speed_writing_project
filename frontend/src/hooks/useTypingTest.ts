@@ -44,6 +44,7 @@ const useTypingTest = (options: {
         // Start game on first key press
         if (gameState === GameState.Idle && e.key.length === 1) {
             startGame();
+            typingSession.handleKeyPress(e);
         }
 
         // Delegate to typing session if game is running

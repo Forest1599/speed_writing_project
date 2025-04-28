@@ -22,13 +22,12 @@ export const useAuthForm = (route: string, method: string) => {
             
             // Handles logic for login
             if (method === 'login') {
-            localStorage.setItem(ACCESS_TOKEN, res.data.access);
-            localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-            navigate('/');
-
+                localStorage.setItem(ACCESS_TOKEN, res.data.access);
+                localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
+                navigate('/');
             } else {
-            localStorage.setItem('successMessage', 'Account created successfully! Please log in.');
-            navigate('/login');
+                localStorage.setItem('successMessage', 'Account created successfully! Please log in.');
+                navigate('/login');
             }
 
         } catch (err: any) {

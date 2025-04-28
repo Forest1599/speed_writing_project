@@ -1,50 +1,61 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faKeyboard } from '@fortawesome/free-regular-svg-icons/faKeyboard';
-import { faChartSimple, faUser } from '@fortawesome/free-solid-svg-icons';
-
-import { ACCESS_TOKEN } from "../../constants/constants";
+import { faChartSimple, faUser, faQuoteLeft } from '@fortawesome/free-solid-svg-icons';
 
 const Navbar = () => {
 
-    // const { isLoggedIn } = useAuth();
-    const [ isLoggedIn ] = useState(!!localStorage.getItem(ACCESS_TOKEN));
+    return (
+        <nav className="p-7 navbar">
+            <div className="flex justify-between items-center relative text-2xl">
 
-
-  return (
-    <nav className="p-7 navbar">
-        <div className="flex justify-between text-2xl">
-            <div className="text-white text-base">
+                {/* Left: Logo */}
+                <div className="flex text-2xl flex-shrink-0 navbar-btn">
                 <Link to="/">
-                    LOGO
+                    <FontAwesomeIcon icon={faQuoteLeft} />
+                    <span className="text-xl"> Speed Writing App</span>
                 </Link>
-            </div>
- 
-            <div className='text-center flex space-x-5'>
+                </div>
+
+                {/* Center: Buttons (only show on md+ screens) */}
+                <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 space-x-5">
                 <div>
                     <Link to="/">
                         <FontAwesomeIcon className="navbar-btn" icon={faKeyboard} />
                     </Link>
                 </div>
-
                 <div>
-                    <Link to={isLoggedIn ? "/adaptive" : "/login"}>
+                    <Link to="/adaptive">
                         <FontAwesomeIcon className="navbar-btn" icon={faChartSimple} />
                     </Link>
                 </div>
-            </div>
+                </div>
 
-            <div>
-                <Link to={isLoggedIn ? "/profile" : "/login"}>
+                {/* Right: Profile and (Keyboard + Chart) for small screens */}
+                <div className="flex items-center space-x-5">
+                
+                {/* Keyboard and Chart icons only on small screens */}
+                <div className="flex md:hidden space-x-5">
+                    <Link to="/">
+                        <FontAwesomeIcon className="navbar-btn" icon={faKeyboard} />
+                    </Link>
+                    {/* <Link to={isLoggedIn ? "/adaptive" : "/login"}>
+                        <FontAwesomeIcon className="navbar-btn" icon={faChartSimple} />
+                    </Link> */}
+                    <Link to="/adaptive">
+                        <FontAwesomeIcon className="navbar-btn" icon={faChartSimple} />
+                    </Link>
+                </div>
+
+                {/* Profile icon always visible */}
+                <Link to="/profile">
                     <FontAwesomeIcon className="navbar-btn" icon={faUser} />
                 </Link>
-            </div>
+                </div>
 
-        </div>
-    </nav>
-  )
+            </div>
+        </nav>
+    )
 }
 
 export default Navbar;

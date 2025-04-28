@@ -51,8 +51,6 @@ class ProfileStatsView(APIView):
                 'wpm': session['wpm']
             } for session in list(random_sessions)[::-1]
         ]
-        
-        print(adaptive_wpm_history)
 
         return Response({
             "username": user.username,
