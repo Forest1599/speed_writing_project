@@ -1,10 +1,7 @@
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants/constants";
 import { jwtDecode } from 'jwt-decode';
 
-
-const navigate = useNavigate();
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL // import environment variable from .env to make requests
@@ -22,7 +19,7 @@ api.interceptors.request.use(
             // Token expired
             localStorage.removeItem(ACCESS_TOKEN);
             localStorage.removeItem(REFRESH_TOKEN);
-            navigate("/"); // redirect
+            window.location.href = '/'; // redirect
             return Promise.reject(new Error("Access token expired"));
           }
   
