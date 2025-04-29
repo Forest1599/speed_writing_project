@@ -32,6 +32,7 @@ const SaveTypingSession = async (
     });
 
   } catch (error) {
+    alert('There was an error saving your typing session. Please try again.');
   }
 };
 

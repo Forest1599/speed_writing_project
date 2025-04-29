@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import useTypingTest from '../../hooks/useTypingTest';
 import HiddenInput from './HiddenInput';
 import Timer from './Timer';
@@ -12,11 +12,13 @@ type TypingTestProps = {
 };
 
 const TypingTest: React.FC<TypingTestProps> = ({ mode }) => {
+  // Typing test options
   const gameOptions = {
     gameDuration: 10,
     mode: mode,
   };
 
+  // Typing test hook providing full game state for the UI
   const {
     userInput,
     completedWords,
@@ -30,11 +32,13 @@ const TypingTest: React.FC<TypingTestProps> = ({ mode }) => {
     updateLineMap,
   } = useTypingTest(gameOptions);
 
+  // Track if the hidden input is focused
   const inputRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState(false);
 
-
-
+  /**
+   * If game ended, show result screen
+   */
   if (gameState === GameState.Ended) {
     return (
       <>
@@ -46,11 +50,16 @@ const TypingTest: React.FC<TypingTestProps> = ({ mode }) => {
     );
   }
 
+  /**
+   * Render typing test
+   */
   return (
     <section className="">
       <HiddenInput 
         ref={inputRef} 
         onKeyDown={handleKeyPress}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
       />
 
       <div className="mt-44">
@@ -60,25 +69,26 @@ const TypingTest: React.FC<TypingTestProps> = ({ mode }) => {
 
         <Timer duration={gameOptions.gameDuration} timeLeft={timeLeft} />
 
-        {/* <div className="relative"> */}
-          {/* Blurred overlay */}
-          {/* {!isFocused && ( */}
-            {/* // <div */}
-              {/* // className="absolute p-20 inset-0 bg-neutral-800 bg-opacity-50 backdrop-blur-sm z-10 rounded-lg flex items-center justify-center cursor-pointer" */}
-            {/* // > */}
-              {/* <span className="text-xl text-white">Click to start typing</span> */}
-            {/* </div> */}
-          {/* // )} */}
+        <div className="relative p-6">
+          {/* Blurred overlay when input is not focused */}
+          {!isFocused && (
+            <div
+              className="absolute inset-0 z-10 bg-neutral-800 bg-opacity-50 backdrop-blur-sm flex items-center justify-center rounded-lg cursor-pointer"
+              onClick={() => inputRef.current?.focus()} // Focus input when clicked
+            >
+              <span className="text-xl text-white">Click to start typing</span>
+            </div>
+          )}
 
+          {/* Main text typing area */}
           <TextTypingArea
             words={words}
             currentWordIndex={currentWordIndex}
             userInput={userInput}
             completedWords={completedWords}
-            hiddenInputRef={inputRef}
             onLinesCalculated={updateLineMap}
           />
-        {/* </div> */}
+        </div>
       </div>
 
       <div className="mt-5">

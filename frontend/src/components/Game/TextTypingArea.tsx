@@ -7,7 +7,6 @@ type Props = {
   currentWordIndex: number;
   userInput: string;
   completedWords: CompletedWord[];
-  hiddenInputRef: React.RefObject<HTMLInputElement>;
   onLinesCalculated?: (lineMap: number[]) => void; // Add this prop
 };
 
@@ -16,7 +15,6 @@ const TextTypingArea: React.FC<Props> = ({
   currentWordIndex,
   userInput,
   completedWords,
-  hiddenInputRef,
   onLinesCalculated,
 }) => {
 
@@ -24,9 +22,6 @@ const TextTypingArea: React.FC<Props> = ({
   const [scrollLine, setScrollLine] = useState(0);
   const [lineHeight, setLineHeight] = useState(0);
   const lineMapRef = useRef<number[]>([]); // Track which word is on which line
-
-  // Focuses on the input
-  const focusInput = () => hiddenInputRef.current?.focus();
 
 
   useEffect(() => {
@@ -65,8 +60,6 @@ const TextTypingArea: React.FC<Props> = ({
     // Add resize observer
     const resizeObserver = new ResizeObserver(() => {
       calculateLines();
-
-
     });
 
     if (wordRefs.current[0]) {
@@ -90,7 +83,7 @@ const TextTypingArea: React.FC<Props> = ({
   }, [currentWordIndex]);
   
   return (
-    <div className="typing-area overflow-hidden h-[calc(3.1*3rem)]" onClick={focusInput}>
+    <div className="typing-area overflow-hidden h-[calc(3.1*3rem)]">
       <div
         className="text-3xl flex flex-wrap transition-transform duration-200"
         style={{

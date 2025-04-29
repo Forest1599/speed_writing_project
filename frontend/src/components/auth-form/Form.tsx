@@ -3,6 +3,7 @@ import { FormField } from "./FormField";
 import { useAuthForm } from "../../hooks/usetAuthForm";
 import { FormMessage } from "./FormMessage";
 import { FormLink } from "./FormLink";
+import { AcceptPrivacy } from "./AcceptPrivacy"
 
 // Props used to differentiate the form
 type FormProps = {
@@ -21,6 +22,8 @@ export const Form: React.FC<FormProps> = ({
       setUsername,
       password,
       setPassword,
+      acceptedTerms,
+      setAcceptedTerms,
       loading,
       error,
       handleSubmit,
@@ -64,6 +67,10 @@ export const Form: React.FC<FormProps> = ({
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                     placeholder="Enter your password"
                 />
+
+                {formName === "Register" && (
+                    <AcceptPrivacy accepted={acceptedTerms} setAccepted={setAcceptedTerms} />
+                )}
 
                 <button
                     type="submit"

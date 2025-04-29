@@ -11,6 +11,9 @@ export const useAuthForm = (route: string, method: string) => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
+  // GDPR acceptance
+  const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false); // ✅ Add GDPR acceptance
+
   // Form states
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,6 +37,17 @@ export const useAuthForm = (route: string, method: string) => {
         localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
         navigate('/');
       } else {
+
+        if (!acceptedTerms) {
+            setError('You must accept the Privacy Policy before registering.');
+            return;
+        }
+
+        if (username.length > 12) {
+            setError('Username cannot be longer than 8 characters.');
+            return;
+        }
+    
         // Registration success, redirect to login with success message
         localStorage.setItem('successMessage', 'Account created successfully! Please log in.');
         navigate('/login');
@@ -73,6 +87,8 @@ export const useAuthForm = (route: string, method: string) => {
     setUsername,
     password,
     setPassword,
+    setAcceptedTerms,
+    acceptedTerms,
     loading,
     error,
     handleSubmit,

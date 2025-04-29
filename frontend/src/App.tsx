@@ -11,6 +11,7 @@ import ProtectedRoute from './Routes/ProtectedRoute';
 import './App.css'
 import RandomTest from './pages/RandomTest';
 import AdaptiveTest from './pages/AdaptiveTest';
+import PrivacyPage from './pages/PrivacyPage';
 
 // When the user tries to logout,
 function Logout() {
@@ -37,6 +38,7 @@ function App() {
         <Route path="/login" element={<Login/>}></Route>
         <Route path="/logout" element={<Logout/>} ></Route>
         <Route path="/register" element={<Register/>}></Route>
+        <Route path="/privacy-policy" element={<PrivacyPage/>}></Route>
         
         <Route path="/profile" element={
           <ProtectedRoute>

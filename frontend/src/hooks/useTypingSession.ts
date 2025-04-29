@@ -1,132 +1,130 @@
 import { useState, KeyboardEvent } from 'react';
 import { CompletedWord } from '../types/CompletedWord';
 
-/**
- * Custom hook to manage a typing session state
- */
 const useTypingSession = (words: string[]) => {
   
-  // Typing state
-  const [userInput, setUserInput] = useState<string>("");
+  // The current user input
+  const [userInput, setUserInput] = useState("");
+
+  // The current word the user is working on
   const [currentWordIndex, setCurrentWordIndex] = useState<number>(0);
-  const [charIndex, setCharIndex] = useState<number>(0);
+
+  // The current character the user is working on
+  const [charIndex, setCharIndex] = useState<number>(0)
+
+  // All of the user inputted words
   const [completedWords, setCompletedWords] = useState<CompletedWord[]>([]);
+
+  // Backspace count per word
   const [backspaceCount, setBackspaceCount] = useState<number>(0);
 
-  // Mapping of words to their line number for multi-line support
-  const [lineMap, setLineMap] = useState<number[]>([]);
+  const [lineMap, setLineMap] = useState<number[]>([]); // Track which word is on which line
 
-  /**
-   * Updates the map of lines
-   */
   const updateLineMap = (newLineMap: number[]) => {
     setLineMap(newLineMap);
   };
 
-  /**
-   * Handles all key press events
-   */
+  // Handle keyboard input
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    const currentWord = words[currentWordIndex];
+
+    const currentWord: string = words[currentWordIndex];
 
     // Ignore modifier keys except Backspace and Space
     if (e.key.length > 1 && e.key !== "Backspace" && e.key !== " ") return;
 
-    switch (e.key) {
+    switch(e.key) {
       case "Backspace":
         handleBackspace();
         break;
       case " ":
         handleSpace(currentWord);
-        e.preventDefault(); // Prevent space from typing inside the input
+        e.preventDefault();
         break;
       default:
         handleCharacterInput(e.key, currentWord);
     }
-  };
+  }
 
-  /**
-   * Handles when backspace is pressed
-   */
+  // Handles when backspace is clicked
   const handleBackspace = () => {
     if (charIndex === 0 && currentWordIndex > 0) {
+
       const currentLine = lineMap[currentWordIndex] || 0;
       const prevLine = lineMap[currentWordIndex - 1] || 0;
+      
+      if (prevLine < currentLine) {
+        // Don't allow going back to previous lines
+        return;
+      }
 
-      // Prevent going back to previous lines
-      if (prevLine < currentLine) return;
 
-      // Go back to previous word
+      // Move to the previous word the user inputted
       const previousWord = completedWords[completedWords.length - 1];
-
+      
       setCompletedWords((prev) => prev.slice(0, -1));
       setCurrentWordIndex((prev) => prev - 1);
       setUserInput(previousWord.typedWord);
       setCharIndex(previousWord.typedWord.length);
       setBackspaceCount(previousWord.backspaceCount + 1);
 
-    } else if (charIndex > 0) {
-      // Remove last character
-      setBackspaceCount((prev) => prev + 1);
-      setUserInput((prev) => prev.slice(0, -1));
-      setCharIndex((prev) => prev - 1);
+    } else if (charIndex > 0) { // If not the first character
+
+      setBackspaceCount((prev) => prev + 1); // adds a backspace
+      setUserInput(userInput.slice(0, -1)); // removes the last char from user Input
+      setCharIndex(charIndex - 1);
     }
-  };
+  }
 
-  /**
-   * Handles when space is pressed
-   * Finalizes the current word
-   */
+
+  // Handles when space is clicked
   const handleSpace = (currentWord: string) => {
-    if (charIndex < 1) return; // Do not allow submitting empty words
 
+    if (charIndex < 1) return; // Do not allow space as first character
+
+    // Adds a new word to the completedWords
     setCompletedWords((prev) => [
       ...prev,
       {
         targetWord: currentWord,
         typedWord: userInput,
         isCorrect: userInput.trim() === currentWord,
-        backspaceCount: backspaceCount,
-      },
-    ]);
+        backspaceCount: backspaceCount
+      }
+    ])
 
-    // Reset state for next word
+    // Clear the indexes
     setUserInput("");
     setCharIndex(0);
     setBackspaceCount(0);
-    setCurrentWordIndex((prev) => prev + 1);
-  };
+    setCurrentWordIndex(prev => prev + 1);
+  }
 
-  /**
-   * Handles character input typing
-   */
+
   const handleCharacterInput = (key: string, currentWord: string) => {
     if (charIndex < currentWord.length) {
-      setUserInput((prev) => prev + key);
-      setCharIndex((prev) => prev + 1);
-    }
-  };
 
-  /**
-   * Resets the typing session
-   */
+      // increment the inputs for the word
+      setUserInput(userInput + key);
+      setCharIndex(charIndex + 1);
+    }
+  }
+
   const handleReset = () => {
     setUserInput('');
     setCompletedWords([]);
     setCharIndex(0);
     setCurrentWordIndex(0);
     setBackspaceCount(0);
-  };
+  }
 
-  // Return the state and handlers
   return {
     userInput,
     completedWords,
     currentWordIndex,
     handleKeyPress,
     handleReset,
-    updateLineMap,
+    updateLineMap
   };
-};
+}
 
 export default useTypingSession;
