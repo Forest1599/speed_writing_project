@@ -1,5 +1,8 @@
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 import { ACCESS_TOKEN } from "../../constants/constants";
+
+const navigate = useNavigate();
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL // import environment variable from .env to make requests
@@ -15,6 +18,11 @@ api.interceptors.request.use(
 
         return config;
     }, (error) => {
+
+        // Clear invalid tokens
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        navigate('/');
         return Promise.reject(error);
     }
 )
