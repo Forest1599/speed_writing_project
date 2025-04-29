@@ -21,7 +21,7 @@ class TypingSession(models.Model):
         return f"{self.user.username} - {self.wpm} WPM"
     
 
-# Word performance linked to a session
+# Specific word performance linked to a session
 class WordPerformance(models.Model):
     session = models.ForeignKey(TypingSession, on_delete=models.CASCADE, related_name="word_performances")
     target_word = models.CharField(max_length=100)

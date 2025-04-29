@@ -1,18 +1,17 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import useTypingTest from '../../hooks/useTypingTest';
 import HiddenInput from './HiddenInput';
 import Timer from './Timer';
 import ResultScreen from './ResultScreen';
 import TextTypingArea from './TextTypingArea';
-
 import ResetButton from './ResetButton';
 import { GameState } from '../../types/GameState';
 
 type TypingTestProps = {
-  mode: 'random' | 'adaptive'
-}
+  mode: 'random' | 'adaptive';
+};
 
-const TypingTest: React.FC<TypingTestProps> = ({mode}) => {
+const TypingTest: React.FC<TypingTestProps> = ({ mode }) => {
   const gameOptions = {
     gameDuration: 10,
     mode: mode,
@@ -22,59 +21,69 @@ const TypingTest: React.FC<TypingTestProps> = ({mode}) => {
     userInput,
     completedWords,
     handleKeyPress,
-    timeLeft,       
+    timeLeft,
     settings,
     gameState,
     resetGame,
     currentWordIndex,
-    words
+    words,
+    updateLineMap,
   } = useTypingTest(gameOptions);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const [isFocused, setIsFocused] = useState(false);
+
 
 
   if (gameState === GameState.Ended) {
     return (
-        <>
-            <div className='mt-10'>
-              <ResetButton resetGame={resetGame}/>
-            </div>
-
-            <ResultScreen completedWords={completedWords} settings={settings} />
-
-        </>
-    )
+      <>
+        <div className="mt-10">
+          <ResetButton resetGame={resetGame} />
+        </div>
+        <ResultScreen completedWords={completedWords} settings={settings} />
+      </>
+    );
   }
 
   return (
     <section className="">
-      <HiddenInput ref={inputRef} onKeyDown={handleKeyPress} />
-       
-      <div className='mt-44'>
+      <HiddenInput 
+        ref={inputRef} 
+        onKeyDown={handleKeyPress}
+      />
 
+      <div className="mt-44">
         <h2 className="text-center text-4xl font-semibold text-gray-700 mb-8">
           {mode === 'random' ? 'Randomized Word Test' : 'Adapted Word Test'}
         </h2>
 
-        <Timer
-            duration={gameOptions.gameDuration}
-            timeLeft={timeLeft}
-        />
+        <Timer duration={gameOptions.gameDuration} timeLeft={timeLeft} />
 
-        <TextTypingArea
+        {/* <div className="relative"> */}
+          {/* Blurred overlay */}
+          {/* {!isFocused && ( */}
+            {/* // <div */}
+              {/* // className="absolute p-20 inset-0 bg-neutral-800 bg-opacity-50 backdrop-blur-sm z-10 rounded-lg flex items-center justify-center cursor-pointer" */}
+            {/* // > */}
+              {/* <span className="text-xl text-white">Click to start typing</span> */}
+            {/* </div> */}
+          {/* // )} */}
+
+          <TextTypingArea
             words={words}
             currentWordIndex={currentWordIndex}
-
             userInput={userInput}
             completedWords={completedWords}
             hiddenInputRef={inputRef}
-        />
-      </div> 
-      
-      <div className="mt-5 ">
-        <ResetButton resetGame={resetGame}/>
+            onLinesCalculated={updateLineMap}
+          />
+        {/* </div> */}
       </div>
 
+      <div className="mt-5">
+        <ResetButton resetGame={resetGame} />
+      </div>
     </section>
   );
 };

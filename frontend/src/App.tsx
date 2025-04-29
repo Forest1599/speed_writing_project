@@ -1,5 +1,3 @@
-// import { useState } from 'react'
-
 import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider, Navigate } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
 
@@ -8,13 +6,11 @@ import Register from './pages/auth/Register';
 import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
 
-// Will use this later
 import ProtectedRoute from './Routes/ProtectedRoute';
 
 import './App.css'
 import RandomTest from './pages/RandomTest';
 import AdaptiveTest from './pages/AdaptiveTest';
-//import { AuthProvider } from './components/AuthContext';
 
 // When the user tries to logout,
 function Logout() {
@@ -25,13 +21,8 @@ function Logout() {
 
 
 function App() {
-  
-  // Use protected routes for routes that are required by login such as statistics and profile
-
   const router = createBrowserRouter(
     createRoutesFromElements(
-    
-
       <Route path='/' element={<MainLayout/>}>
         <Route index element={
             <RandomTest/>
@@ -58,12 +49,10 @@ function App() {
     )
   )
   return (
-    // <AuthProvider>
     <>
       <RouterProvider router={router}></RouterProvider>
     </>
   )
-    // </AuthProvider>)
 }
 
 export default App;

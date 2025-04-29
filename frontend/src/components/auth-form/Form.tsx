@@ -47,7 +47,6 @@ export const Form: React.FC<FormProps> = ({
                 <FormMessage type="error" message={error} />
                 <FormMessage type="success" message={successMessage} />
 
-
                 <FormField
                     id="username"
                     label="Username"

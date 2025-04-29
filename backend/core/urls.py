@@ -23,6 +23,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
 
+    # API urls for account management
     path("api/user/register/", CreateUserView.as_view(), name="register"),
     path("api/user/delete-account/", DeleteAccountView.as_view(), name="delete_account"),
     path("api/token/", TokenObtainPairView.as_view(), name="get_token"),

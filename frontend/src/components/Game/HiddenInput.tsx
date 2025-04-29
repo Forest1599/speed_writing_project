@@ -11,8 +11,9 @@ const HiddenInput = forwardRef<HTMLInputElement, HiddenInputProps>((props, ref) 
     <input
       ref={ref}
       type="text"
-      onKeyDown={onKeyDown} // Directly use the onKeyDown prop
+      //onKeyDown={onKeyDown} // Directly use the onKeyDown prop
       className="absolute opacity-0"
+      {...props} // This spreads all props including onFocus, onBlur, etc.
       autoFocus
     />
   );

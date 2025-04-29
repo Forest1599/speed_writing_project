@@ -34,7 +34,6 @@ const Word: React.FC<WordProps> = ({
     return (
         <div key={wordIndex} className="relative m-2 flex gap-[2px]">
         
-            {/* Maybe memoization */}
             {/* Take each word and split it and use a tag for each letter  */}
             {word.split("").map((char: string, charIndex: number) => {
             

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 
+// Link not found page
 const NotFound = () => {
   return (
     <div className="flex items-center justify-center mt-24 text-white">

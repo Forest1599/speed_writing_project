@@ -9,11 +9,12 @@ from ..models import WordPerformance
 ALL_WORDS = [w.lower() for w in brown.words() if w.isalpha()]
 FREQ_DIST = FreqDist(ALL_WORDS)
 
-# Constants
+# Default Constants
 DEFAULT_MIN_LEN = 3
 DEFAULT_MAX_LEN = 5
 DEFAULT_FREQ_RANK = 500
 
+# Maximum Minimum Thresholds
 MIN_LEN_LIMIT = 3
 MAX_LEN_LIMIT = 10
 MIN_FREQ_RANK = 500
@@ -47,19 +48,22 @@ def get_typing_difficulty(user):
 
         wpm_change = ((latest.wpm - avg_wpm) / avg_wpm) * 100 if avg_wpm else 0
         
+        # If WPM increases by 10 from the average
         if wpm_change >= 10:
             min_len = min(MAX_LEN_LIMIT, min_len + 1)
             max_len = min(MAX_LEN_LIMIT, max_len + 1)
             freq_rank = min(MAX_FREQ_RANK, freq_rank + 500)
 
+        # If WPM decreases by 10 from the average
         elif wpm_change <= -10:
             min_len = max(MIN_LEN_LIMIT, min_len - 1)
-            max_len = max(min_len, max_len - 1)
+            max_len = max(MAX_LEN_LIMIT, max_len - 1)
             freq_rank = max(MIN_FREQ_RANK, freq_rank - 500)
 
     return min_len, max_len, freq_rank
 
 
+# Gets the struggled words from previous session max=5
 def get_struggled_words_from_last_sessions(user, max_sessions=5):
     session_ids = list(
         TypingSession.objects.filter(user=user)
@@ -80,7 +84,7 @@ def get_struggled_words_from_last_sessions(user, max_sessions=5):
 
 
 
-def get_filtered_words(min_len, max_len, freq_rank):
+def get_filtered_words(min_len, max_len, freq_rank) :
     top_words = [word for word, _ in FREQ_DIST.most_common(freq_rank)]
     filtered_words = [word for word in top_words if min_len <= len(word) <= max_len]
     return filtered_words
@@ -92,7 +96,7 @@ def get_similar_words(base_word, word_pool, max_distance=2):
     ]
 
 # Update the logic later on
-def generate_words_for_user(user, num_words=200, similar_ratio=0.1):
+def generate_words_for_user(user, num_words=200, similar_ratio=0.2):
     # Step 1: Get difficulty parameters for the user based on past performance
     min_len, max_len, freq_rank = get_typing_difficulty(user)
 

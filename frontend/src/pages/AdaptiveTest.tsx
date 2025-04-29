@@ -1,5 +1,6 @@
 import TypingTest from "../components/Game/TypingTest";
 
+// Adaptive test page
 const AdaptiveTest = () => {
   return <TypingTest mode="adaptive" />;
 };

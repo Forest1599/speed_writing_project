@@ -1,4 +1,4 @@
-
+// Completed word data structure
 export type CompletedWord = {
     typedWord: string;
     targetWord: string;

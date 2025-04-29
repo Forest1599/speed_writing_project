@@ -1,9 +1,8 @@
 import axios from "axios";
 import { ACCESS_TOKEN } from "../../constants/constants";
 
-// Used for local requests but probably will have to change this to domain name
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL // import environment variable from .env
+    baseURL: import.meta.env.VITE_API_URL // import environment variable from .env to make requests
 }) 
 
 api.interceptors.request.use(

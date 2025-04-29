@@ -1,7 +1,6 @@
 import { CompletedWord } from "../../types/CompletedWord";
 import api from "./api";
 
-
 // Saves typing session information
 const SaveTypingSession = async (
   wpm: number,
@@ -22,7 +21,7 @@ const SaveTypingSession = async (
       backspace_count: word.backspaceCount,
     }));
 
-    const response = await api.post("/api/typing-sessions/", {
+    await api.post("/api/typing-sessions/", {
       wpm,
       accuracy,
       min_word_length: minWordLength,
@@ -32,9 +31,7 @@ const SaveTypingSession = async (
       mode: mode
     });
 
-    console.log("Session saved:", response.data); // DEBUG ONLY
   } catch (error) {
-    console.error("Error saving session:", error); // Need to add some sort of error handling
   }
 };
 

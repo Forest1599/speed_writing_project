@@ -1,11 +1,12 @@
 import React from 'react';
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react';
 import saveTypingSession from '../api/SaveTypingSession';
 import { CompletedWord } from '../../types/CompletedWord';
 import { selectWordsToStore } from '../../utils/wordAnalysis';
 import { calculateTypingResults, TypingResults } from '../../utils/typingCalculations';
-import { ACCESS_TOKEN } from '../../constants/constants'; // make sure it's imported
+import { ACCESS_TOKEN } from '../../constants/constants'; // import the access token key
 
+// Define the TypingSettings type to describe session settings
 type TypingSettings = {
     min_word_length: number,
     max_word_length: number,
@@ -13,16 +14,17 @@ type TypingSettings = {
     mode: string,
 }
 
+// Define the expected props for the ResultScreen component
 type ResultScreenProps = {
-    completedWords: CompletedWord[],
-    settings: TypingSettings
+    completedWords: CompletedWord[], // list of words typed during the session
+    settings: TypingSettings // settings used for the typing session
 }
 
 const ResultScreen: React.FC<ResultScreenProps> = ({
     completedWords,
     settings
 }) => {
-
+    // State to store calculated results like WPM, accuracy, etc.
     const [results, setResults] = useState<TypingResults>({
       correctWords: 0,
       incorrectWords: 0,
@@ -33,22 +35,26 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
       totalBackspaces: 0
     });
 
+    // State to track if the session has already been saved to backend
     const [hasSaved, setHasSaved] = useState<boolean>(false);
 
+    // Calculate typing results when completedWords change
     useEffect(() => {
        const calculatedResults = calculateTypingResults(completedWords);
        setResults(calculatedResults);
     }, [completedWords])
 
+    // Ref to prevent multiple POST requests
     const hasPosted = useRef(false);
 
+    // Effect to save the session results once calculated
     useEffect(() => {
       const token = localStorage.getItem(ACCESS_TOKEN);
 
       if (results.wpm > 0 && token && !hasSaved && !hasPosted.current) {
-        hasPosted.current = true; // to fix multiple post requests
-        const wordsToStore = selectWordsToStore(completedWords);
-      
+        hasPosted.current = true; // prevent multiple API calls
+        const wordsToStore = selectWordsToStore(completedWords); // select important word data
+
         saveTypingSession(
           results.wpm,
           results.accuracy,
@@ -58,19 +64,17 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
           settings.mode,
           wordsToStore
         )
-        
-        // Check if the user is authenticated or not
-        .then(() => setHasSaved(true))
-        .catch((err) => console.error("Error saving session:", err));
+        // After successful save, mark session as saved
+        .then(() => setHasSaved(true));
       }
     }, [results]);
 
-    
-    // Maybe make these into their own components later on
+    // Component render
     return (
       <div className="max-w-md mx-auto mt-10 p-6 bg-gray-800 text-white rounded-2xl shadow-lg">
         <h2 className="text-3xl font-bold text-center mb-6">Typing Test Results</h2>
 
+        {/* Main results summary */}
         <div className="space-y-4 text-lg">
           <div className="flex justify-between">
             <span>Time:</span>
@@ -97,6 +101,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
             <span className="text-red-500">{results.totalBackspaces}</span>
           </div>
 
+          {/* Display mistyped words */}
           <div className="mt-8">
           <h3 className="text-center font-semibold text-lg mb-4">❌ Mistyped Words</h3>
 
@@ -104,6 +109,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
             <div className="text-center font-semibold text-red-400">You Typed</div>
             <div className="text-center font-semibold text-green-400">Correct Word</div>
 
+            {/* List mistyped words */}
             {completedWords
               .filter(word => !word.isCorrect)
               .map((word, index) => (
@@ -122,7 +128,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
           
         </div>
       </div>
-      );
+    );
 }
 
 export default ResultScreen;
