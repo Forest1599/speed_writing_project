@@ -12,7 +12,7 @@ export const useAuthForm = (route: string, method: string) => {
   const [password, setPassword] = useState<string>('');
 
   // GDPR acceptance
-  const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false); // ✅ Add GDPR acceptance
+  const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false); 
 
   // Form states
   const [loading, setLoading] = useState<boolean>(false);
