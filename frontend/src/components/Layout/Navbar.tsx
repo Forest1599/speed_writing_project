@@ -39,9 +39,7 @@ const Navbar = () => {
                     <Link to="/">
                         <FontAwesomeIcon className="navbar-btn" icon={faKeyboard} />
                     </Link>
-                    {/* <Link to={isLoggedIn ? "/adaptive" : "/login"}>
-                        <FontAwesomeIcon className="navbar-btn" icon={faChartSimple} />
-                    </Link> */}
+                    
                     <Link to="/adaptive">
                         <FontAwesomeIcon className="navbar-btn" icon={faChartSimple} />
                     </Link>
