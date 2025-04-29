@@ -75,7 +75,7 @@ def get_struggled_words_from_last_sessions(user, max_sessions=5):
 
     struggled = [
         wp.target_word for wp in word_data 
-        if not wp.is_correct or wp.backspace_count >= 3
+        if wp.backspace_count >= 1
     ]
 
     # Return unique list while keeping order
@@ -107,18 +107,25 @@ def generate_words_for_user(user, num_words=200, similar_ratio=0.2):
     struggled = get_struggled_words_from_last_sessions(user)
     similar_words = []
 
+    print(struggled)
     # Step 4: Try to find similar words from the filtered pool for each struggled word
     for base_word in struggled:
         sims = get_similar_words(base_word, filtered)
+        
+        # Shuffle to randomize which ones get picked
+        random.shuffle(sims)
 
-        # If similar words are found, randomly select one to include
-        if sims:
-            similar_words.append(random.choice(sims))
+        for sim_word in sims:
+            if sim_word not in similar_words:
+                similar_words.append(sim_word)
 
-        # Limit how many similar words we include (e.g., 10% of the total word count)
+            if len(similar_words) >= int(num_words * similar_ratio):
+                break
+
         if len(similar_words) >= int(num_words * similar_ratio):
             break
-
+    
+    print(similar_words)
     # Step 5: Calculate how many more random words we need to reach the desired count
     remaining_needed = max(0, num_words - len(similar_words))
 
