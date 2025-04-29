@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
-import { ACCESS_TOKEN } from "../../constants/constants";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants/constants";
+import { jwtDecode } from 'jwt-decode';
+
 
 const navigate = useNavigate();
 
@@ -10,21 +12,29 @@ const api = axios.create({
 
 api.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem(ACCESS_TOKEN);
-
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+      const token = localStorage.getItem(ACCESS_TOKEN);
+  
+      if (token) {
+        try {
+          const decoded: any = jwtDecode(token);
+          const now = Date.now() / 1000;
+          if (decoded.exp && decoded.exp < now) {
+            // Token expired
+            localStorage.removeItem(ACCESS_TOKEN);
+            localStorage.removeItem(REFRESH_TOKEN);
+            navigate("/"); // redirect
+            return Promise.reject(new Error("Access token expired"));
+          }
+  
+          config.headers.Authorization = `Bearer ${token}`;
+        } catch (error) {
+          console.error("Failed to decode token", error);
         }
-
-        return config;
-    }, (error) => {
-
-        // Clear invalid tokens
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        navigate('/');
-        return Promise.reject(error);
-    }
-)
+      }
+  
+      return config;
+    },
+    (error) => Promise.reject(error)
+  );
 
 export default api;
