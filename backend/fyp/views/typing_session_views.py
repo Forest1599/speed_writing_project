@@ -33,6 +33,8 @@ class GetWordView(generics.GenericAPIView):
             # Generates words based on users past experience
             word_batch = generate_words_for_user(request.user)
         else:
+
+            print("reached this!")
             # Random words generated or invalid fallback
             word_batch = generate_words_for_user(None)
 
